@@ -1,0 +1,46 @@
+.message {
+  padding: 16px 0;
+  border-bottom: #f0f0f0 1px solid;
+  display: flex;
+}
+
+.message_bird {
+  background-color: #fafafa;
+}
+
+.message_user {
+  color: #333;
+  width: 96px;
+  text-align: left;
+  margin-left: 8px;
+}
+
+.message_text {
+  margin-left: 8px;
+  text-align: left;
+}
+
+.form {
+  display: flex;
+  position: relative;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.textRoot {
+  width: 100%;
+}
+
+.textarea {
+  width: calc(100% - 56px);
+  padding-right: 56px;
+}
+
+.button {
+  position: absolute;
+  right: 8px;
+  bottom: 1rem;
+  border: none;
+  background: transparent;
+  color: #335d92;
+}
