@@ -49,7 +49,7 @@ export function Chat() {
             {
               text: e.currentTarget[messageFieldName].value,
               userType: "human",
-              username: "Daniel",
+              username: "Human",
             },
           ]);
         }}
