@@ -1,9 +1,8 @@
 import solid from "solid-start/vite";
 import { defineConfig } from "vitest/config";
-import suidPlugin from "@suid/vite-plugin";
 
 export default defineConfig({
-  plugins: [suidPlugin(), solid()],
+  plugins: [solid()],
   test: {
     deps: {
       registerNodeLoader: true,
