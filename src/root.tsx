@@ -16,9 +16,13 @@ export default function Root() {
   return (
     <Html lang="en">
       <Head>
-        <Title>SolidStart - With Vitest</Title>
+        <Title>BirdChat - Chat with birds today!</Title>
         <Meta charset="utf-8" />
         <Meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+          rel="stylesheet"
+        />
       </Head>
       <Body>
         <Suspense>
