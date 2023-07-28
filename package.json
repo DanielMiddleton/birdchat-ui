@@ -45,6 +45,7 @@
     "vitest": "^0.26.3"
   },
   "dependencies": {
-    "@kobalte/core": "^0.9.8"
+    "@kobalte/core": "^0.9.8",
+    "solid-start-vercel": "^0.2.29"
   }
 }
