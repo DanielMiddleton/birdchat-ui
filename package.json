@@ -7,7 +7,13 @@
     "test": "vitest run",
     "test-watch": "vitest",
     "test-ui": "vitest --ui",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "lint": "eslint src",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "src/**": "eslint --quiet --fix",
+    "**/*": "prettier --write --ignore-unknown"
   },
   "type": "module",
   "devDependencies": {
@@ -16,15 +22,26 @@
     "@solidjs/testing-library": "^0.5.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/testing-library__jest-dom": "^5.14.5",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
     "@vitest/coverage-c8": "^0.26.3",
     "@vitest/ui": "^0.26.3",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^8.9.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-solid": "^0.12.1",
+    "husky": "^8.0.3",
     "jsdom": "^20.0.3",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.0",
     "solid-js": "^1.7.8",
     "solid-start": "^0.2.19",
     "solid-start-node": "^0.2.19",
     "typescript": "^4.9.4",
     "undici": "^5.15.1",
     "vite": "^4.4.6",
+    "vite-plugin-eslint": "^1.8.1",
     "vitest": "^0.26.3"
   },
   "dependencies": {

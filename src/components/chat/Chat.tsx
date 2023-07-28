@@ -63,7 +63,7 @@ export function Chat() {
               if (e.key === "Enter" && !e.ctrlKey) {
                 e.preventDefault();
                 e.currentTarget.form?.dispatchEvent(
-                  new Event("submit", { cancelable: true })
+                  new Event("submit", { cancelable: true }),
                 );
                 e.currentTarget.value = "";
               }
