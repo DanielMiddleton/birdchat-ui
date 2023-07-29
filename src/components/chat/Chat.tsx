@@ -1,8 +1,9 @@
 import { Button, TextField } from "@kobalte/core";
 import { For, createEffect, createSignal } from "solid-js";
 import css from "./Chat.module.css";
-import { createServerAction$ } from "solid-start/server";
+import server$ from "solid-start/server";
 import { createRouteAction } from "solid-start";
+import { Loader } from "../loader";
 
 const messageFieldName = "newMessage";
 
@@ -25,21 +26,21 @@ interface Message {
 
 export function Chat() {
   const [messages, setMessages] = createSignal<Message[]>([]);
-  const [messaging, fetchMessage] = createServerAction$<void, Message>(
-    async () => {
-      await new Promise((resolve) =>
-        setTimeout(resolve, 500 + Math.random() * 2000),
-      );
+  const fetchMessage = server$(async () => {
+    await new Promise((resolve) =>
+      setTimeout(resolve, 500 + Math.random() * 2000),
+    );
 
-      return {
-        userType: "bird",
-        username: "Larry A. Bird",
-        text: birdMessages[Math.floor(Math.random() * birdMessages.length)],
-      };
-    },
-  );
+    const message: Message = {
+      userType: "bird",
+      username: "Larry A. Bird",
+      text: birdMessages[Math.floor(Math.random() * birdMessages.length)],
+    };
 
-  const [, { Form }] = createRouteAction(async (form: FormData) => {
+    return message;
+  });
+
+  const [messaging, { Form }] = createRouteAction(async (form: FormData) => {
     const text = form.get(messageFieldName);
 
     if (!text) {
@@ -55,7 +56,9 @@ export function Chat() {
       },
     ]);
 
-    fetchMessage();
+    const response = await fetchMessage();
+
+    setMessages((messages) => [...messages, response]);
   });
 
   createEffect(() => {
@@ -89,6 +92,7 @@ export function Chat() {
           </div>
         )}
       </For>
+      <Loader loading={messaging.pending} />
       <Form class={css.form}>
         <TextField.Root class={css.textRoot}>
           <TextField.TextArea
