@@ -12,10 +12,13 @@ const birdMessage = {
 type Message = typeof birdMessage;
 
 export function Chat() {
-  const [messages, setMessages] = createSignal<Message[]>([birdMessage]);
+  const [messages, setMessages] = createSignal<Message[]>([]);
   createEffect(() => {
-    // Trigger a reply from the bird when the last message is from the human
-    if (messages()[messages().length - 1].userType === "human") {
+    // The bird must always have the last word
+    if (
+      messages().length === 0 ||
+      messages()[messages().length - 1].userType !== "bird"
+    ) {
       setMessages((messages) => [...messages, birdMessage]);
     }
   });
