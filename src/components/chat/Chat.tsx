@@ -1,9 +1,10 @@
 import { Button, TextField } from "@kobalte/core";
-import { For, createEffect, createSignal } from "solid-js";
+import { For, createEffect, createMemo, createSignal } from "solid-js";
 import css from "./Chat.module.css";
 import server$ from "solid-start/server";
 import { createRouteAction } from "solid-start";
 import { Loader } from "../loader";
+import { isServer } from "solid-js/web";
 
 const messageFieldName = "newMessage";
 
@@ -24,8 +25,17 @@ interface Message {
   text: string;
 }
 
+const isMobile = () => {
+  const userAgent =
+    typeof window.navigator === "undefined" ? "" : navigator.userAgent;
+  const mobileRegex =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
+  return mobileRegex.test(userAgent);
+};
+
 export function Chat() {
   const [messages, setMessages] = createSignal<Message[]>([]);
+  const mobile = createMemo(() => !isServer && isMobile());
   const fetchMessage = server$(async () => {
     await new Promise((resolve) =>
       setTimeout(resolve, 500 + Math.random() * 2000),
@@ -100,7 +110,11 @@ export function Chat() {
             class={css.textarea}
             name={messageFieldName}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.ctrlKey) {
+              if (mobile()) {
+                return;
+              }
+
+              if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 e.currentTarget.form?.dispatchEvent(
                   new Event("submit", { cancelable: true }),
@@ -108,7 +122,7 @@ export function Chat() {
                 e.currentTarget.value = "";
               }
 
-              if (e.key === "Enter" && e.ctrlKey) {
+              if (e.key === "Enter" && e.shiftKey) {
                 e.currentTarget.value += "\n";
               }
             }}
