@@ -32,15 +32,20 @@
 }
 
 .textarea {
-  width: calc(100% - 56px);
-  padding-right: 56px;
+  width: calc(100% - 96px);
+  padding-right: 96px;
+  min-height: 40px;
 }
 
 .button {
   position: absolute;
-  right: 8px;
+  right: 12px;
+  top: 8px;
   bottom: 1rem;
-  border: none;
+  border: 1px solid #335e9239;
+  height: 32px;
+  width: 80px;
+  border-radius: 5px;
   background: transparent;
   color: #335d92;
 }

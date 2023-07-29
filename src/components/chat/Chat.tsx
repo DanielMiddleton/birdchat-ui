@@ -34,6 +34,7 @@ const isMobile = () => {
 };
 
 export function Chat() {
+  let textAreaRef: HTMLTextAreaElement | undefined;
   const [messages, setMessages] = createSignal<Message[]>([]);
   const mobile = createMemo(() => !isServer && isMobile());
   const fetchMessage = server$(async () => {
@@ -65,6 +66,8 @@ export function Chat() {
         text: text as string,
       },
     ]);
+
+    textAreaRef!.value = "";
 
     const response = await fetchMessage();
 
@@ -106,6 +109,7 @@ export function Chat() {
       <Form class={css.form}>
         <TextField.Root class={css.textRoot}>
           <TextField.TextArea
+            ref={textAreaRef}
             placeholder="Send a message"
             class={css.textarea}
             name={messageFieldName}
@@ -119,7 +123,6 @@ export function Chat() {
                 e.currentTarget.form?.dispatchEvent(
                   new Event("submit", { cancelable: true }),
                 );
-                e.currentTarget.value = "";
               }
 
               if (e.key === "Enter" && e.shiftKey) {
