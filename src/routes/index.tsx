@@ -2,7 +2,6 @@ import { Chat } from "~/components/chat";
 import css from "./index.module.css";
 
 export default function Home() {
-  // Replace the content of this function with a chat client centered in the screen
   return (
     <>
       <header>
