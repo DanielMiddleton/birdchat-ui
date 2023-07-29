@@ -1,26 +1,76 @@
 import { Button, TextField } from "@kobalte/core";
 import { For, createEffect, createSignal } from "solid-js";
 import css from "./Chat.module.css";
+import { createServerAction$ } from "solid-start/server";
+import { createRouteAction } from "solid-start";
 
 const messageFieldName = "newMessage";
-const birdMessage = {
-  text: "I'm a bird!",
-  userType: "bird",
-  username: "Larry A. Bird",
-};
 
-type Message = typeof birdMessage;
+const birdMessages = [
+  "I'm a bird!",
+  "What's gravity?",
+  "What are you doing down there?",
+  "My favorite meal is worms",
+  "Have you ever tried flying?",
+  "Have you ever seen a coconut explode?",
+  "Do I have a soul?",
+  "I'm so over it",
+];
+
+interface Message {
+  userType: "bird" | "human";
+  username: string;
+  text: string;
+}
 
 export function Chat() {
   const [messages, setMessages] = createSignal<Message[]>([]);
-  createEffect(() => {
-    // The bird must always have the last word
-    if (
-      messages().length === 0 ||
-      messages()[messages().length - 1].userType !== "bird"
-    ) {
-      setMessages((messages) => [...messages, birdMessage]);
+  const [messaging, fetchMessage] = createServerAction$<void, Message>(
+    async () => {
+      await new Promise((resolve) =>
+        setTimeout(resolve, 500 + Math.random() * 2000),
+      );
+
+      return {
+        userType: "bird",
+        username: "Larry A. Bird",
+        text: birdMessages[Math.floor(Math.random() * birdMessages.length)],
+      };
+    },
+  );
+
+  const [, { Form }] = createRouteAction(async (form: FormData) => {
+    const text = form.get(messageFieldName);
+
+    if (!text) {
+      return;
     }
+
+    setMessages((messages) => [
+      ...messages,
+      {
+        userType: "human",
+        username: "You",
+        text: text as string,
+      },
+    ]);
+
+    fetchMessage();
+  });
+
+  createEffect(() => {
+    if (
+      messages().length > 0 &&
+      messages()[messages().length - 1].userType === "bird"
+    ) {
+      return;
+    }
+
+    if (messaging.result) {
+      setMessages((messages) => [...messages, messaging.result!]);
+    }
+
+    messaging.clear();
   });
 
   return (
@@ -39,24 +89,7 @@ export function Chat() {
           </div>
         )}
       </For>
-      <form
-        class={css.form}
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!e.currentTarget[messageFieldName].value) {
-            return;
-          }
-
-          setMessages((messages) => [
-            ...messages,
-            {
-              text: e.currentTarget[messageFieldName].value,
-              userType: "human",
-              username: "Human",
-            },
-          ]);
-        }}
-      >
+      <Form class={css.form}>
         <TextField.Root class={css.textRoot}>
           <TextField.TextArea
             placeholder="Send a message"
@@ -80,7 +113,7 @@ export function Chat() {
         <Button.Root type="submit" class={css.button}>
           Send
         </Button.Root>
-      </form>
+      </Form>
     </div>
   );
 }
