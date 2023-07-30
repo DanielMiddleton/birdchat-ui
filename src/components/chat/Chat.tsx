@@ -1,9 +1,17 @@
 import { Button, TextField } from "@kobalte/core";
-import { For, createEffect, createMemo, createSignal } from "solid-js";
+import {
+  For,
+  createEffect,
+  createMemo,
+  createResource,
+  createSignal,
+  useContext,
+} from "solid-js";
 import css from "./Chat.module.css";
 import server$ from "solid-start/server";
 import { createRouteAction } from "solid-start";
 import { Loader } from "../loader";
+import { SupabaseContext } from "~/contexts";
 import { isServer } from "solid-js/web";
 
 const messageFieldName = "newMessage";
@@ -35,6 +43,14 @@ const isMobile = () => {
 
 export function Chat() {
   let textAreaRef: HTMLTextAreaElement | undefined;
+  const supabase = useContext(SupabaseContext);
+  const [birds, { refetch }] = createResource(async () => {
+    const { data } = await supabase.from("Birds").select("*");
+    return data;
+  });
+  createEffect(() => {
+    console.log(birds());
+  });
   const [messages, setMessages] = createSignal<Message[]>([]);
   const mobile = createMemo(() => !isServer && isMobile());
   const fetchMessage = server$(async () => {
@@ -54,6 +70,8 @@ export function Chat() {
   const [messaging, { Form }] = createRouteAction(async (form: FormData) => {
     const text = form.get(messageFieldName);
 
+    refetch();
+
     if (!text) {
       return;
     }
@@ -68,9 +86,7 @@ export function Chat() {
     ]);
 
     textAreaRef!.value = "";
-
     const response = await fetchMessage();
-
     setMessages((messages) => [...messages, response]);
   });
 

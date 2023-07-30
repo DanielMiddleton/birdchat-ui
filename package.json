@@ -46,6 +46,7 @@
     "vitest": "^0.26.3"
   },
   "dependencies": {
-    "@kobalte/core": "^0.9.8"
+    "@kobalte/core": "^0.9.8",
+    "@supabase/supabase-js": "^2.31.0"
   }
 }
