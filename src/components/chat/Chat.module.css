@@ -32,8 +32,8 @@
 }
 
 .textarea {
-  width: calc(100% - 96px);
-  padding-right: 96px;
+  width: calc(100% - 104px);
+  padding: 8px 96px 8px 8px;
   min-height: 40px;
 }
 
