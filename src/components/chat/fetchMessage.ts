@@ -15,9 +15,9 @@ export interface Message {
   text: string;
 }
 
-export async function fetchMessageAction() {
+export async function fetchMessageAction$() {
   await new Promise((resolve) =>
-    setTimeout(resolve, 500 + Math.random() * 2000),
+    setTimeout(resolve, 200 + Math.random() * 1700),
   );
 
   const message: Message = {

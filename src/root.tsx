@@ -11,7 +11,7 @@ import {
   Title,
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
-import { BrowserContext } from "./contexts";
+import { BrowserContext, UserContextProvider } from "./contexts";
 import { isServer } from "solid-js/web";
 
 const isMobile = () => {
@@ -40,9 +40,11 @@ export default function Root() {
             <BrowserContext.Provider
               value={{ isMobile: !isServer && isMobile() }}
             >
-              <Routes>
-                <FileRoutes />
-              </Routes>
+              <UserContextProvider>
+                <Routes>
+                  <FileRoutes />
+                </Routes>
+              </UserContextProvider>
             </BrowserContext.Provider>
           </ErrorBoundary>
         </Suspense>
