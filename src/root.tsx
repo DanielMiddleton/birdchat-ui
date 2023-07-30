@@ -11,6 +11,16 @@ import {
   Title,
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
+import { BrowserContext } from "./contexts";
+import { isServer } from "solid-js/web";
+
+const isMobile = () => {
+  const userAgent =
+    typeof window.navigator === "undefined" ? "" : navigator.userAgent;
+  const mobileRegex =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
+  return mobileRegex.test(userAgent);
+};
 
 export default function Root() {
   return (
@@ -27,9 +37,13 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <Routes>
-              <FileRoutes />
-            </Routes>
+            <BrowserContext.Provider
+              value={{ isMobile: !isServer && isMobile() }}
+            >
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </BrowserContext.Provider>
           </ErrorBoundary>
         </Suspense>
         <Scripts />
