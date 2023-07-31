@@ -1,36 +1,22 @@
 import { Button, TextField } from "@kobalte/core";
-import {
-  For,
-  createEffect,
-  createResource,
-  createSignal,
-  useContext,
-} from "solid-js";
+import { For, createEffect, createSignal, useContext } from "solid-js";
 import css from "./Chat.module.css";
 import server$ from "solid-start/server";
 import { createRouteAction } from "solid-start";
 import { Loader } from "../loader";
-import { BrowserContext, SupabaseContext, UserContext } from "~/contexts";
+import { BrowserContext } from "~/contexts";
 import { Message, fetchMessageAction$ } from "./fetchMessage";
 
 const messageFieldName = "newMessage";
 
 export function Chat() {
   let textAreaRef: HTMLTextAreaElement | undefined;
-  const supabase = useContext(SupabaseContext);
-  const { session } = useContext(UserContext);
-  const [, { refetch }] = createResource(async () => {
-    const { data } = await supabase.from("Birds").select("*");
-    return data;
-  });
   const [messages, setMessages] = createSignal<Message[]>([]);
   const { isMobile } = useContext(BrowserContext);
   const fetchMessage = server$(fetchMessageAction$);
 
   const [messaging, { Form }] = createRouteAction(async (form: FormData) => {
     const text = form.get(messageFieldName);
-
-    refetch();
 
     if (!text) {
       return;
@@ -51,7 +37,6 @@ export function Chat() {
   });
 
   createEffect(() => {
-    console.log(session);
     if (
       messages().length > 0 &&
       messages()[messages().length - 1].userType === "bird"

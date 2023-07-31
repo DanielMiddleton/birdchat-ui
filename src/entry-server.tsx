@@ -12,12 +12,17 @@ const unauthenticatedPaths = ["/auth/login", "/auth/register"];
 export default createHandler(
   ({ forward }) => {
     return async (event) => {
+      event.supabase = createSupabaseServerClient(event.request);
+      return forward(event);
+    };
+  },
+  ({ forward }) => {
+    return async (event) => {
       if (!protectedPaths.includes(new URL(event.request.url).pathname)) {
         return forward(event);
       }
 
-      const { request } = event;
-      const supabase = createSupabaseServerClient(request);
+      const { supabase } = event;
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -35,8 +40,7 @@ export default createHandler(
         return forward(event);
       }
 
-      const { request } = event;
-      const supabase = createSupabaseServerClient(request);
+      const { supabase } = event;
       const {
         data: { session },
       } = await supabase.auth.getSession();
