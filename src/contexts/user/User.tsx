@@ -3,7 +3,6 @@ import {
   useContext,
   createContext,
   JSXElement,
-  createEffect,
   Show,
 } from "solid-js";
 import { SupabaseContext } from "../supabase";
@@ -29,13 +28,7 @@ export function UserContextProvider(props: UserContextProviderProps) {
   const supabase = useContext(SupabaseContext);
   const [session, { refetch }] = createResource(async () => {
     const session = await supabase.auth.getSession();
-    // console.log(session);
     return session;
-  });
-
-  createEffect(() => {
-    // console.log(session());
-    // console.log(supabase);
   });
 
   return (
