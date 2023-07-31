@@ -9,9 +9,16 @@ import {
   Meta,
   Scripts,
   Title,
+  useServerContext,
 } from "solid-start";
 import { ErrorBoundary } from "solid-start/error-boundary";
-import { BrowserContext, UserContextProvider } from "./contexts";
+import {
+  BrowserContext,
+  SupabaseContext,
+  UserContextProvider,
+  createSupabaseBrowserClient,
+  createSupabaseServerClient,
+} from "./contexts";
 import { isServer } from "solid-js/web";
 
 const isMobile = () => {
@@ -23,6 +30,8 @@ const isMobile = () => {
 };
 
 export default function Root() {
+  const server = useServerContext();
+
   return (
     <Html lang="en">
       <Head>
@@ -37,15 +46,23 @@ export default function Root() {
       <Body>
         <Suspense>
           <ErrorBoundary>
-            <BrowserContext.Provider
-              value={{ isMobile: !isServer && isMobile() }}
+            <SupabaseContext.Provider
+              value={
+                isServer
+                  ? createSupabaseServerClient(server.request)
+                  : createSupabaseBrowserClient()
+              }
             >
-              <UserContextProvider>
-                <Routes>
-                  <FileRoutes />
-                </Routes>
-              </UserContextProvider>
-            </BrowserContext.Provider>
+              <BrowserContext.Provider
+                value={{ isMobile: !isServer && isMobile() }}
+              >
+                <UserContextProvider>
+                  <Routes>
+                    <FileRoutes />
+                  </Routes>
+                </UserContextProvider>
+              </BrowserContext.Provider>
+            </SupabaseContext.Provider>
           </ErrorBoundary>
         </Suspense>
         <Scripts />

@@ -1,11 +1,9 @@
-import { Chat, Layout, Protected } from "~/components";
+import { Chat, Layout } from "~/components";
 
 export default function Home() {
   return (
-    <Protected>
-      <Layout>
-        <Chat />
-      </Layout>
-    </Protected>
+    <Layout>
+      <Chat />
+    </Layout>
   );
 }

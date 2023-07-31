@@ -1,17 +1,7 @@
 import { createContext } from "solid-js";
-import { createClient } from "@supabase/supabase-js";
-import { isServer } from "solid-js/web";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { createSupabaseBrowserClient } from "./createSupabaseServerClient";
 
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_API_URL,
-  import.meta.env.VITE_SUPABASE_API_KEY,
-  {
-    auth: {
-      autoRefreshToken: !isServer,
-      persistSession: !isServer,
-      detectSessionInUrl: !isServer,
-    },
-  },
+export const SupabaseContext = createContext<SupabaseClient>(
+  createSupabaseBrowserClient(),
 );
-
-export const SupabaseContext = createContext(supabase);

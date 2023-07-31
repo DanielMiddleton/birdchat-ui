@@ -10,21 +10,17 @@ import css from "./Chat.module.css";
 import server$ from "solid-start/server";
 import { createRouteAction } from "solid-start";
 import { Loader } from "../loader";
-import { BrowserContext, SupabaseContext, UserContext } from "~/contexts";
+import { BrowserContext, SupabaseContext } from "~/contexts";
 import { Message, fetchMessageAction$ } from "./fetchMessage";
 
 const messageFieldName = "newMessage";
 
 export function Chat() {
   let textAreaRef: HTMLTextAreaElement | undefined;
-  const { session } = useContext(UserContext);
   const supabase = useContext(SupabaseContext);
-  const [birds, { refetch }] = createResource(async () => {
+  const [, { refetch }] = createResource(async () => {
     const { data } = await supabase.from("Birds").select("*");
     return data;
-  });
-  createEffect(() => {
-    console.log(birds(), session);
   });
   const [messages, setMessages] = createSignal<Message[]>([]);
   const { isMobile } = useContext(BrowserContext);
