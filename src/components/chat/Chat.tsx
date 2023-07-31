@@ -1,55 +1,19 @@
 import { Button, TextField } from "@kobalte/core";
-import { For, createEffect, createMemo, createSignal } from "solid-js";
+import { For, createEffect, createSignal, useContext } from "solid-js";
 import css from "./Chat.module.css";
 import server$ from "solid-start/server";
 import { createRouteAction } from "solid-start";
 import { Loader } from "../loader";
-import { isServer } from "solid-js/web";
+import { BrowserContext } from "~/contexts";
+import { Message, fetchMessageAction$ } from "./fetchMessage";
 
 const messageFieldName = "newMessage";
-
-const birdMessages = [
-  "I'm a bird!",
-  "What's gravity?",
-  "What are you doing down there?",
-  "My favorite meal is worms",
-  "Have you ever tried flying?",
-  "Have you ever seen a coconut explode?",
-  "Do I have a soul?",
-  "I'm so over it",
-];
-
-interface Message {
-  userType: "bird" | "human";
-  username: string;
-  text: string;
-}
-
-const isMobile = () => {
-  const userAgent =
-    typeof window.navigator === "undefined" ? "" : navigator.userAgent;
-  const mobileRegex =
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
-  return mobileRegex.test(userAgent);
-};
 
 export function Chat() {
   let textAreaRef: HTMLTextAreaElement | undefined;
   const [messages, setMessages] = createSignal<Message[]>([]);
-  const mobile = createMemo(() => !isServer && isMobile());
-  const fetchMessage = server$(async () => {
-    await new Promise((resolve) =>
-      setTimeout(resolve, 500 + Math.random() * 2000),
-    );
-
-    const message: Message = {
-      userType: "bird",
-      username: "Larry A. Bird",
-      text: birdMessages[Math.floor(Math.random() * birdMessages.length)],
-    };
-
-    return message;
-  });
+  const { isMobile } = useContext(BrowserContext);
+  const fetchMessage = server$(fetchMessageAction$);
 
   const [messaging, { Form }] = createRouteAction(async (form: FormData) => {
     const text = form.get(messageFieldName);
@@ -68,9 +32,7 @@ export function Chat() {
     ]);
 
     textAreaRef!.value = "";
-
     const response = await fetchMessage();
-
     setMessages((messages) => [...messages, response]);
   });
 
@@ -114,7 +76,7 @@ export function Chat() {
             class={css.textarea}
             name={messageFieldName}
             onKeyDown={(e) => {
-              if (mobile()) {
+              if (isMobile) {
                 return;
               }
 

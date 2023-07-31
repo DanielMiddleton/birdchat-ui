@@ -21,6 +21,7 @@
     "@solidjs/router": "^0.8.2",
     "@solidjs/testing-library": "^0.5.2",
     "@testing-library/jest-dom": "^5.16.5",
+    "@types/cookie": "^0.5.1",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
@@ -46,6 +47,9 @@
     "vitest": "^0.26.3"
   },
   "dependencies": {
-    "@kobalte/core": "^0.9.8"
+    "@kobalte/core": "^0.9.8",
+    "@supabase/auth-helpers-shared": "^0.4.1",
+    "@supabase/supabase-js": "^2.31.0",
+    "cookie": "^0.5.0"
   }
 }
