@@ -18,13 +18,16 @@ class ServerCookieAuthStorageAdapter extends CookieAuthStorageAdapter {
   }
 
   protected setCookie(name: string, value: string) {
-    this.request.headers.set("Set-Cookie", cookie.serialize(name, value));
+    this.request.headers.set(
+      "Set-Cookie",
+      cookie.serialize(name, value, { httpOnly: false }),
+    );
   }
 
   protected deleteCookie(name: string) {
     this.request.headers.set(
       "Set-Cookie",
-      cookie.serialize(name, "", { maxAge: -1 }),
+      cookie.serialize(name, "", { maxAge: 0, httpOnly: false }),
     );
   }
 }

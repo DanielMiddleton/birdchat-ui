@@ -18,8 +18,11 @@ export default createHandler(
 
       const { request } = event;
       const supabase = createSupabaseServerClient(request);
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-      if (!(await supabase.auth.getSession())) {
+      if (!session) {
         return redirect("/auth/login");
       }
 
@@ -34,8 +37,11 @@ export default createHandler(
 
       const { request } = event;
       const supabase = createSupabaseServerClient(request);
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-      if (await supabase.auth.getSession()) {
+      if (session) {
         return redirect("/");
       }
 
